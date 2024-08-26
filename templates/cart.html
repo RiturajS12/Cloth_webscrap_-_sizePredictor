@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FashionHub - Cart</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #030303;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo img {
+            max-width: 150px;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+        }
+
+        .menu {
+            display: flex;
+            gap: 15px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            left: -1280px;
+        }
+
+        .menu li a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu li a:hover {
+            background-color: #444444;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 30px;
+            color: #000;
+        }
+
+        .cart-grid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #252525;
+            padding: 15px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 800px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .cart-item img {
+            max-width: 100px;
+            border-radius: 10px;
+        }
+
+        .cart-item-details {
+            flex-grow: 1;
+            padding-left: 20px;
+        }
+
+        .cart-item-details h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .cart-item-details p {
+            margin: 5px 0;
+        }
+
+        .cart-item-actions button,
+        .cart-summary button {
+            padding: 10px 20px;
+            background-color: #1e88e5;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .cart-item-actions button:hover,
+        .cart-summary button:hover {
+            background-color: #1565c0;
+        }
+
+        .cart-summary {
+            text-align: right;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #252525;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .cart-summary h3 {
+            margin-bottom: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #252525;
+            color: #777;
+            margin-top: 30px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .social-icons a {
+            margin: 0 10px;
+        }
+
+        .social-icons img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+            color: #000;
+            border-radius: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .cart-item-actions button {
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                height: 30px;
+            }
+
+            .logo img {
+                max-width: 100px;
+                position: relative;
+                top: 7px;
+            }
+
+            .menu {
+                flex-direction: column;
+                align-items: flex-start;
+                left: 70px;
+                bottom: 57px;
+                gap: 10px;
+            }
+
+            .cart-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .cart-item img {
+                margin-bottom: 10px;
+            }
+
+            .cart-summary {
+                text-align: center;
+                width: 95%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .menu li a {
+                padding: 8px 10px;
+            }
+
+            .cart-item {
+                padding: 10px;
+            }
+
+            .cart-item-details h3 {
+                font-size: 16px;
+            }
+
+            .cart-item-actions button,
+            .cart-summary button {
+                padding: 8px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='brand_7417708 (1).png') }}" alt="FashionHub Logo">
+        </div>
+        <nav>
+            <button class="navbar-toggle" id="navbar-toggle">&#9776;</button>
+            <ul class="menu" id="menu">
+                <li><a href="/">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="cart">
+        <h2>Your Shopping Cart</h2>
+        {% if cart_items %}
+        <div class="cart-grid">
+            {% for item in cart_items %}
+            <div class="cart-item">
+                <img src="{{ item['Image'] }}" alt="{{ item['Product Name'] }}" onclick="previewImage(this)">
+                <div class="cart-item-details">
+                    <h3>{{ item['Product Name'] }}</h3>
+                    <p>Price: {{ item['Prices'] }}</p>
+                    <p>Quantity: {{ item['Quantity'] }}</p>
+                    {% if item['Size'] %}
+                    <p>Size: {{ item['Size'] if item['Size'] else 'Not selected' }}</p>
+                    {% endif %}
+                </div>
+                <div class="cart-item-actions">
+                    <button onclick='showSizeOptions("{{ item["Product Name"] }}", "{{ item["Category"] }}", "{{ item["Size"] }}")'>Select Size</button>
+                    <a href="{{ url_for('remove_from_cart', Product_Name=item['Product Name'], category=item['Category']) }}">
+                        <button>Remove</button>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="cart-summary">
+            <h3>Total Price: {{ total_price }}</h3>
+            <button>Proceed to Checkout</button>
+        </div>
+        {% else %}
+        <p>Your cart is empty. <a href="/">Continue shopping</a></p>
+        {% endif %}
+    </section>        
+
+    <div id="sizeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Select Your Size</h2>
+            <form id="sizeForm">
+                <label for="size">Manual Size Selection:</label>
+                <select id="size" name="size">
+                    <option value="S">Small</option>
+                    <option value="M">Medium</option>
+                    <option value="L">Large</option>
+                    <option value="XL">Extra Large</option>
+                </select>
+
+                <h3>Or Predict Your Size:</h3>
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="age">
+                <label for="weight">Weight (kg):</label>
+                <input type="number" id="weight" name="weight">
+                <label for="height">Height (cm):</label>
+                <input type="number" id="height" name="height">
+                <button type="button" onclick="predictSize()">Predict Size</button>
+            </form>
+            <button type="button" onclick="saveSize()">Save Size</button>
+        </div>
+    </div>
+
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img id="previewImage" src="" alt="Product Image">
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2023 FashionHub. All rights reserved.</p>
+            <div class="social-icons">
+                <a href="#"><img src="/static/github_3488408.png" alt="Github"></a>
+                <a href="#"><img src="/static/social_15455800.png" alt="LinkedIN"></a>
+                <a href="#"><img src="/static/social_13051763.png" alt="Instagram"></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const navbarToggle = document.getElementById('navbar-toggle');
+        const menu = document.getElementById('menu');
+
+        navbarToggle.addEventListener('click', () => {
+            menu.classList.toggle('open');
+        });
+
+        function previewImage(imageElement) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('previewImage');
+            modal.style.display = "block";
+            modalImg.src = imageElement.src;
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            modal.style.display = "none";
+        }
+
+        function showSizeOptions(productName, category) {
+            var modal = document.getElementById("sizeModal");
+            modal.style.display = "block";
+            document.getElementById("sizeForm").dataset.productName = productName;
+            document.getElementById("sizeForm").dataset.category = category;
+        }
+
+
+
+        function closeModal() {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => modal.style.display = 'none');
+        }
+
+        function predictSize() {
+            var age = document.getElementById("age").value;
+            var weight = document.getElementById("weight").value;
+            var height = document.getElementById("height").value;
+            fetch('/predict_size', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ age: age, weight: weight, height: height })
+            }).then(response => response.json())
+            .then(data => {
+                document.getElementById("size").value = data.predicted_size;
+            });
+        }
+
+        window.onclick = function(event) {
+            var modal = document.getElementById("sizeModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+function saveSize() {
+            var size = document.getElementById("size").value;
+            var productName = document.getElementById("sizeForm").dataset.productName;
+            var category = document.getElementById("sizeForm").dataset.category;
+            fetch(`/save_size/${productName}/${category}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ size: size })
+            }).then(response => {
+                if (response.ok) {
+                    closeModal();
+                    location.reload();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

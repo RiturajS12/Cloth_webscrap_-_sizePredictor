@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FashionHub - Men's Collection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            background-color: #1a1a1a; 
+            color: #e0e0e0; 
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0d0d0d, #1a1a1a); 
+            color: #e0e0e0;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.4);
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo img {
+            max-width: 150px;
+        }
+
+        nav ul.menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        nav ul.menu li {
+            margin: 0 10px;
+        }
+
+        nav ul.menu li a {
+            color: #00e5ff;
+            text-decoration: none;
+        }
+
+        nav ul.menu li a:hover {
+            color: #007bb5;
+        }
+
+        .search-bar {
+            max-width: 80%;
+            background-color: #0d0d0d;
+            box-shadow: 0 4px 6px rgba(0, 255, 255, 0.2);
+            padding: 10px;
+            margin: 10px 0;
+            flex-grow: 1;
+        }
+
+        .search-bar form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+        .search-bar select,
+        .search-bar input[type="number"] {
+            background-color: #1a1a1a;
+            color: #007bb5; 
+            margin: 5px;
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .search-bar button {
+            background-color: #00e5ff; 
+            color: #333;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-bar button:hover {
+            background-color: #007bb5;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .product-card {
+            background-color: #0d0d0d;
+            color: #e0e0e0;
+            border: 1px solid #333; 
+            box-shadow: 0 4px 12px rgba(0, 255, 255, 0.4); 
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .product-card img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        .product-card button {
+            background-color: #00e5ff;
+            color: #333;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .product-card button:hover {
+            background-color: #007bb5;
+        }
+
+        .view-more-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .view-more {
+            background-color: #00e5ff;
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .view-more:hover {
+            background-color: #007bb5; 
+        }
+
+        footer {
+            background-color: #0d0d0d; 
+            color: #e0e0e0;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 255, 255, 0.4); 
+            padding: 20px;
+            text-align: center;
+        }
+
+        .social-icons a {
+            margin: 0 10px;
+            display: inline-block;
+        }
+
+        .social-icons img {
+            filter: drop-shadow(0 0 5px #00e5ff); 
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 80%;
+            height: auto;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #e0e0e0;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #00e5ff;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px;
+            }
+
+            .menu{
+                position: relative;
+                left: -10px;
+            }
+
+            .search-bar {
+                width: 60%;
+                position: relative;
+                top: -20px;
+            }
+
+            .search-bar form {
+                width: 100%;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    .search-bar select,
+    .search-bar input[type="number"],
+    .search-bar button {
+        width: 90px;
+        margin: 1px;
+    }
+
+    .search-bar input[type="number"]{
+        position: relative;
+        top: 0;
+    }
+
+            nav ul.menu {
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo img {
+                margin-bottom: 20px;
+            }
+        }
+        @media (max-width: 480px) {
+            .product-card {
+                padding: 10px;
+            }
+
+            .product-card h3 {
+                font-size: 1.2em;
+            }
+
+            .product-card button {
+                padding: 8px 16px;
+            }
+
+            .view-more {
+                padding: 8px 16px;
+            }
+
+            footer {
+                padding: 15px;
+            }
+
+            footer .social-icons a {
+                margin: 0 5px;
+            }
+        .search-bar {
+                width: 55%;
+                position: relative;
+                top: -35px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='brand_7417708 (1).png') }}" alt="FashionHub Logo">
+        </div>
+        <nav>
+            <ul class="menu">
+                <li><a href="/">Home</a></li>
+            </ul>
+        </nav>
+        <div class="search-bar">
+            <form action="{{ url_for('search') }}" method="get">
+                <select name="category">
+                    <option value="all">All</option>
+                    <option value="men">Men</option>
+                    <option value="women">Women</option>
+                </select>
+                <input type="number" name="min-price" placeholder="Min Price" step="0.01">
+                <input type="number" name="max-price" placeholder="Max Price" step="0.01">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div class="user-options">
+            <a href="/cart">Cart</a>
+        </div>
+    </header>
+
+    <section id="men">
+        <h2>Women's Collection</h2>
+        <div class="product-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <img src="{{ product['Image'] }}" alt="{{ product['Product Name'] }}">
+                <h3>{{ product['Product Name'] }}</h3>
+                <p>₹{{ product['Prices'] }}</p>
+                <a href="{{ url_for('add_to_cart', Product_Name=product['Product Name'], category='Men') }}"><button>Add to Cart</button></a>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="view-more-container">
+            <a href="/men" class="view-more">View More</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 FashionHub. All Rights Reserved.</p>
+        <div class="social-icons">
+            <a href="#"><img src="{{ url_for('static', filename='social-icon1.png') }}" alt="Social Icon 1"></a>
+            <a href="#"><img src="{{ url_for('static', filename='social-icon2.png') }}" alt="Social Icon 2"></a>
+            <a href="#"><img src="{{ url_for('static', filename='social-icon3.png') }}" alt="Social Icon 3"></a>
+        </div>
+    </footer>
+
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script>
+        var modal = document.getElementById("imageModal");
+        var modalImg = document.getElementById("modalImage");
+        var images = document.querySelectorAll(".product-card img");
+        var span = document.getElementsByClassName("close")[0];
+
+        images.forEach(img => {
+            img.onclick = function() {
+                modal.style.display = "block";
+                modalImg.src = this.src;
+            }
+        });
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

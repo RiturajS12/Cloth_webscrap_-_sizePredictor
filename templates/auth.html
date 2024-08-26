@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FashionHub - Login/Signup</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth_styles.css') }}">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .auth-container {
+            background: #ffffffb4;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 400px;
+            max-width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .auth-form {
+            text-align: center;
+        }
+        .auth-form h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .input-group input {
+            width: 90%;
+            padding: 15px;
+            background: #f9f9f960;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #333;
+        }
+        .input-group input:focus {
+            border-color: #fda085;
+            outline: none;
+        }
+        .input-group label {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #ffffff00;
+            padding: 0 5px;
+            color: #e45c3a;
+            font-size: 14px;
+        }
+        .auth-btn {
+            width: 100%;
+            padding: 15px;
+            background: #fda085;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .auth-btn:hover {
+            background: #f6d365;
+        }
+        .toggle-link {
+            display: block;
+            margin-top: 20px;
+            color: #ef4111;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .toggle-link:hover {
+            text-decoration: underline;
+        }
+        .flash-success {
+            color: green;
+        }
+        .flash-error {
+            color: red;
+        }
+        @media (max-width: 600px) {
+            .auth-container {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container" id="auth-container">
+        <div id="login-form" class="auth-form">
+            <h2>Login</h2>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+                {% for category, message in messages %}
+                    <p class="flash-{{ category }}">{{ message }}</p>
+                {% endfor %}
+        {% endif %}
+    {% endwith %}
+            <form action="/login" method="POST">
+                <div class="input-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" name="email" required>
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" name="password" required>
+                </div>
+                <button type="submit" class="auth-btn">Login</button>
+                <a href="#" class="toggle-link" onclick="toggleForm()">Don't have an account? Signup</a>
+            </form>
+        </div>
+
+        <div id="signup-form" class="auth-form" style="display: none;">
+            <h2>Signup</h2>
+            <form action="/signup" method="POST">
+                <div class="input-group">
+                    <label for="signup-username">Username</label>
+                    <input type="text" id="signup-username" name="signup-username" required>
+                </div>
+                <div class="input-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" name="signup-email" required>
+                </div>
+                <div class="input-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" name="signup-password" required>
+                </div>
+                <button type="submit" class="auth-btn">Signup</button>
+                <a href="#" class="toggle-link" onclick="toggleForm()">Already have an account? Login</a>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleForm() {
+            var loginForm = document.getElementById('login-form');
+            var signupForm = document.getElementById('signup-form');
+            
+            if (loginForm.style.display === 'none') {
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+            } else {
+                loginForm.style.display = 'none';
+                signupForm.style.display = 'block';
+            }
+        }
+    </script>
+
+</body>
+</html>
