@@ -1,5 +1,4 @@
 # FashionHub - E-commerce Clothing Store
-
 ## Overview
 
 Welcome to FashionHub, an e-commerce platform designed to provide a seamless shopping experience for both men and women. Our platform not only allows users to browse and purchase a wide range of clothing items but also includes a unique feature that helps users determine their clothing size based on their age, weight, and height to ensure the perfect fit.
